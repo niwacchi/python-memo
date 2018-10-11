@@ -6,12 +6,12 @@
 
   https://brew.sh/index_ja
 
-- Python
+- Python
 ```sh
 brew install python
 ```
 
-- 動作確認
+- 動作確認
 ```sh
 python3
 ```
@@ -25,11 +25,11 @@ python3
 pip3 install xxx
 ```
 ### パッケージ一覧
-- 手動で作成
+- 手動で作成
 ```sh
 echo 'パッケージ' >> requirements.txt
 ```
-
+
 - 全パッケージ情報を含んだ一覧の作成
 ```sh
 pip freeze > constraints.txt
@@ -54,8 +54,8 @@ deactivate
 ```
 
 ## 対話モード
-- 「python」とタイプしてEnter
-
+- 「python」とタイプしてEnter
+
 ### 電卓としての利用
 ```sh
 >>> 1 + 2 * 4
@@ -73,7 +73,7 @@ deactivate
 ```
 
 ### 関数電卓としての利用
-- mathという標準ライブラリをimportする
+- mathという標準ライブラリをimportする
 ```sh
 >>> import math
 >>> math.sin(1) # 三角関数
@@ -83,7 +83,7 @@ deactivate
 ```
 
 ### IPython
-- 高機能RPEL (Read-Eval-Print-Loop = 対話型実行環境)
+- 高機能RPEL (Read-Eval-Print-Loop = 対話型実行環境)
 #### インストール方法
 ```sh
 pip install ipython
@@ -165,9 +165,9 @@ jupyter notebook
 ```py
 x = 1 # xの定義
 y = 2 # yの定義
-
+
 # zの定義
-z = x + y
+z = x + y
 ```
 - 行の始めのほかに、コードの後ろに記述することもできる。
 
@@ -225,7 +225,7 @@ def test_func(a, b)
 >>> type(b)
 <class 'str'>
 ```
-- intとstrの演算はできない
+- intとstrの演算はできない
 ```sh
 >>> a + b
 Traceback (most recent call last):
@@ -259,10 +259,125 @@ TypeError: 'tuple' object does not support item assignment
 >>> b
 [1, 2, 5, 4]
 ```
-- listはミュータブルなので、一度定義した変数の要素を書き換えられる。
+- listはミュータブルなので、一度定義した変数の要素を書き換えられる。
 
 ### 制御フロー
+#### if文 - 条件分岐
+```sh
+>>> utc_time = 12
+>>> city = 'tokyo'
+>>> if city == 'london':
+...     print('{}時です'.format(utc_time))
+... elif city == 'tokyo':
+...     print('{}時です'.format(utc_time + 9))
+... else:
+...     print('都市名を選んでください')
+... 
+21時です
+```
+- if文の括弧はなし
+- インデントでブロックを表現、判別。
+
+#### for文、while文 - ループ
+- 処理のブロックはインデントで判別。
+
+##### リストを用いたfor文
+```sh
+>>> for name in ['太郎', '次郎', '花子']:
+...     print('こんにちは、{}'.format(name))
+... 
+こんにちは、太郎
+こんにちは、次郎
+こんにちは、花子
+```
+
+##### rangeを用いたfor文
+- 特定回数ループする場合に便利。
+- 始点、終点、増分を与えることで指定した組み合わせのリストを生成。
+- 始点と増分は省略可能。省略した場合は0から指定した数値-1までの値を持つシーケンスを生成。
+```sh
+>>> for i in range(3):
+...     print('りんごが{}個'.format(i))
+... 
+りんごが0個
+りんごが1個
+りんごが2個
+```
+
+##### enumerateを用いたfor文
+- インデックス付きのループ処理を行える。
+
+```sh
+>>> for i, name in enumerate(
+...             ['太郎','次郎','花子']):
+...     print('{}, {}'.format(i, name))
+... 
+0, 太郎
+1, 次郎
+2, 花子
+```
+
+##### while文
+```sh
+>>> i = 0
+>>> while i < 3:
+...     print('{}は3より小さい'.format(i))
+...     i += 1
+... 
+0は3より小さい
+1は3より小さい
+2は3より小さい
+```
+
+#### with文 - システムリソースを安全に使うための書き方
+withブロックを抜ける際にあらかじめ定義された終了処理が呼び出される。
+```sh
+>>> with open('test.txt') as f:
+...     print(f.read())
+... 
+1行目
+2行目
+3行目
+
+```
+これは以下と等価
+```sh
+>>> f = open('test.txt')
+>>> print(f.read())
+1行目
+2行目
+3行目
+
+>>> f.close()
+```
+- with文はある処理の開始時と終了時の処理をカプセル化して安全かつ簡潔な処理を記述できる。
+- 例では、f.close()が終了時の処理。with文を使用した場合は、with文の中の処理が全て完了したあと自動的にファイルを閉じる処理が行われる。
+
+#### リスト内包表記 - リスト生成の効率化
+- 簡潔かつ効率的にリスト生成を行う方法
+##### for文を使用した2の倍数リストの生成
+```sh
+>>> a = []
+>>> for x in range(10):
+...     a.append(x * 2)
+... 
+>>> print(a)
+[0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+```
+##### リスト内包表記による2の倍数のリストの生成
+```sh
+>>> [x * 2 for x in range(10)]
+[0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+```
+- リストの要素を先頭に記述し、その後ろに反復シーケンスを表記する。
+- if文を使用することも可能
+```sh
+>>> [x * 2 for x in range(10) if x % 2 == 0]
+[0, 4, 8, 12, 16]
+```
+
 ### 関数
+
 ### クラス
 ### 名前空間とスコープ
 
@@ -272,22 +387,22 @@ TypeError: 'tuple' object does not support item assignment
 - 数式を用いた解析
 - 数式を用いたシュミレーション
 
-### 求められること
-- マシンリソースの効率的な利用
+### 求められること
+- マシンリソースの効率的な利用
 - 高速な処理
 - 可読性
 - メンテナンス性
-
-### Pythonの特徴
+
+### Pythonの特徴
 - それ自体での高速なプログラムは難しい場合がある。
 - 他のプログラミング言語で記述されたコンポーネントと結合しやすい（グルー（糊）言語）
-- 様々なデータソースとのデータ連携
+- 様々なデータソースとのデータ連携
 - ビジュアライゼーション
 - 科学技術計算に適した言語
 
 ### 主要な科学技術計算パッケージ
 #### SciPy Stack
-- Pythonによる科学技術計算の中核をなすパッケージ群
+- Pythonによる科学技術計算の中核をなすパッケージ群
 ##### NumPy
 - 多次元配列を用いた効率的な数値計算のためのパッケージ
 ##### SciPy Library
@@ -303,3 +418,4 @@ TypeError: 'tuple' object does not support item assignment
 ##### nose
 - テストフレームワーク
 
+## Pythonで作るWebアプリケーション
