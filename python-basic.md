@@ -17,7 +17,7 @@ python3
 ```
 
 ### Windows
-
+#### ...pending.
 
 ## パッケージ管理ツール
 ### 使い方
@@ -539,7 +539,213 @@ SyntaxError: positional argument follows keyword argument
 ```
 
 ### クラス
+#### クラスの定義方法
+```sh
+>>> class Vehicle:
+...     def __init__(self, model):
+...         self.model = model
+...         self.meter = 0
+...     def move(self):
+...         self.meter += 1
+...         print(self.meter)
+... 
+```
+- インスタンスメソッド __init__()、move()を定義
+- インスタンスメソッドの第1引数はインスタンス自身なので、慣例としてselfを指定
+- __init__()はシステムが呼び出すメソッド。インスタンスの初期化に利用
+- インスタンス変数は、インスタンスに属性を追加すると作成できる。
+
+#### クラスのインスタンス化
+```sh
+# インスタンス化
+>>> vehicle = Vehicle(2017)
+
+# インスタンス変数にはドット記法でアクセス
+>>> vehicle.model
+2017
+
+# インスタンスメソッドの呼び出し
+>>> vehicle.move()
+1
+>>> 
+```
+
+#### クラスの継承
+```sh
+>>> class Vehicle:
+...     def __init__(self, model):
+...         self.model = model
+...         self.meter = 0
+...     def move(self):
+...         self.meter += 1
+...         print(self.meter)
+... 
+>>> class HornMixin:
+...     def blow(self):
+...         print('Beep!')
+... 
+# オーバーライドしたメソッド内で
+# スーパークラスのメソッドを呼び出す
+>>> class Car(Vehicle, HornMixin):
+...     def move(self):
+...         self.meter += 1
+...         super().move()
+... 
+>>> car = Car(2016)
+>>> car.model
+2016
+>>> car.move()
+2
+>>> car.blow()
+Beep!
+```
+- スーパークラスはクラス名のあとに()で指定する。
+- スーパークラスをカンマ区切りで指定すると多重継承できる
+
+```sh
+>>> Car.mro()
+[<class '__main__.Car'>, <class '__main__.Vehicle'>, <class '__main__.HornMixin'>, <class 'object'>]
+```
+- 多重継承では、複数のスーパークラスで同じ名前のメソッドが定義されていることがある。
+- どちらのクラスのメソッドが先にみつかるかはmro()で確認する。
+
+#### クラスオブジェクトとインスタンス
+##### クラス変数、クラスメソッドの定義方法
+```sh
+>>> class RacingCar(Car):
+...     speed = 2 # クラス変数
+...     @classmethod
+...     def inspect(cls, cars=None): # クラスメソッド
+...         cars = cars or []
+...         for car in list(cars):
+...             print('Model:{}, Meter:{}, Speed:{}'.format(car.model, car.meter, car.speed))
+...     def move(self):
+...         self.meter += self.speed
+...         super().move()
+... 
+>>> car1 = RacingCar(2010)
+
+# 比較のために少し進める
+>>> car1.move()
+4
+>>> car2 = RacingCar(2017)
+
+# クラスメソッドを呼び出す
+>>> RacingCar.inspect([car1, car2])
+Model:2010, Meter:4, Speed:2
+Model:2017, Meter:0, Speed:2
+
+# クラス変数の更新はクラスオブジェクトを通して行う
+>>> RacingCar.Speed = 3
+
+# クラス変数は共有されている
+>>> RacingCar.inspect([car1, car2])
+Model:2010, Meter:4, Speed:2
+Model:2017, Meter:0, Speed:2
+
+# インスタンス変数を通して値を代入すると、新たにインスタンス変数が定義される。
+>>> car2.speed = 4
+>>> RacingCar.inspect([car1, car2])
+# このSpeedはクラス変数RacingCar.speed
+Model:2010, Meter:4, Speed:2
+
+# このSpeedはインスタンス変数car2.speed
+Model:2017, Meter:0, Speed:4
+```
+
 ### 名前空間とスコープ
+- 名前空間やスコープはディレクトリのようなもの。
+- すべてのファイルを１つのディレクトリにまとめるとファイルが探しづらくなり、管理が複雑になる。
+- ディレクトリを分けるとグループごとに整理できるように、名前空間とスコープを使うことで冗長なコードやバグの混入を避けられる。
+- クラスを作ることも名前空間を分ける方法の１つ。
+
+#### 名前空間
+- 名前からオブジェクトへの対応づけ
+##### 例
+- A.func、B.func
+- ドットでアクセスできる要素＝属性
+- funcのみの場合、直接アクセス可能な領域にfuncオブジェクトが定義されていなければNameErrorとなる。
+- 直接アクセスできる領域＝スコープ
+##### スコープ
+#### 例
+- 関数ないで定義する変数＝ローカル変数
+- スコープは関数内
+
+### モジュールの作成
+- モジュールファイルを作成
+```py
+def add(a, b):
+    return a + b
+
+def mul(a, b):
+    return a * b
+```
+- モジュールのimport
+```sh
+>>> import calc
+>>> calc.add(1,2)
+3
+>>> calc.mul(1,2)
+2
+```
+- fromを使うと、モジュール内の特定の属性のみをimportできる。
+```sh
+>>> from calc import add
+>>> add(1,2)
+3
+```
+
+#### モジュールをスクリプトファイルとして実行する
+- モジュールファイルに追記する。
+```py
+def add(a, b):
+    return a + b
+
+def mul(a, b):
+    return a * b
+
+# ファイルの末尾に追記
+if __name__ == '__main__':
+    print(add(1,2), mul(1,2))
+```
+- シェルで実行
+```sh
+(basis) $ python calc.py 
+3 2
+```
+- pythoコマンドに渡されたモジュールは、 __name__の値が__main__の状態で実行されるため、スクリプトとして実行したいモジュールは if __name__ == '__main__': ブロックを書くことが慣例となっている。
+- モジュールがimport文で読み込まれた場合は、__name__ はモジュール名(この場合はcalc)となり、ブロック内では実行されない。
+
+### パッケージの作成
+- 関連するモジュールをディレクトリに集めてパッケージにすることができる。
+- モジュールを階層的に管理する機能
+- __init__.py という名前のファイルのあるディレクトリをパッケージとみなす。
+- __init__.py の中身は空でもOK。
+```sh
+my_package/
+├── __init__.py
+└── calc.py
+```
+
+#### パッケージのimport方法
+- モジュールのimportと同じ。
+```sh
+>>> import my_package.calc
+>>> my_package.calc.add(1,2)
+3
+>>> from my_package import calc
+>>> calc.add(1,2)
+3
+>>> from my_package.calc import add
+>>> add(1,2)
+3
+
+# 別名でimportする機能
+# 名前の衝突を避けたいとき、簡潔な名前でアクセスしたいときに利用
+>>> from my_package.calc import add as my_add
+>>> my_add(1,2)
+3
+```
 
 ## Pythonと科学技術計算
 ### 科学技術計算
