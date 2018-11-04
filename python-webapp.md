@@ -60,3 +60,26 @@ python app.py
 ![Hello bottle](./hello_bottle.png "√")
 - ブラウザでhttp://localhost:8080/abaloneにアクセス
 ![Hello abalone](./hello_abalone.png "√")
+
+#### ルーティング
+- アクセス先URLよWebアプリケーションの処理を対応付ける機能
+- アクセス先URLを引数としたデコレータ@routeで呼び出したい関数をデコレート
+- @routeはキーワード引数methodでHTTPメソッド(GET、POST、PUT、DELETEのいずれか）の指定もできる。
+```py
+# /abaloneのHTTPメソッドをPOSTに変更
+@route('/abalone', method='POST')
+def result():
+    return 'Hello abalone!'
+```
+
+#### テンプレートエンジン
+##### SimpleTemplate機能
+- レスポンスにテンプレートファイルを利用できる。
+- rebaseキーワードを使う
+- %で始まる行をコードとして実行できる
+- {{ var }}と書くことで変数varの値を表示させることができる。
+- {{ !var }}と書くとエスケープ処理を無効化できる。
+
+#### リクエストオブジェクト／レスポンスオブジェクト
+- クライアントからのリクエスト情報はrequestオブジェクトに格納される。
+- リクエスト情報：アクセス先URL、HTTPメソッド、リクエストボディ、ヘッダ、Cookieなど
