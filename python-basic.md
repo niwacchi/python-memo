@@ -16,7 +16,8 @@ python3
 ```
 
 ### Windows
-#### ...pending.
+- 公式サイトからダウンロードしてインストール
+- https://www.python.org/
 
 ## パッケージ管理ツール
 ### 使い方
