@@ -1,19 +1,23 @@
 # Pythonで作るWebアプリケーション
 ## 有名なフレームワーク
 ### Django
+- https://www.djangoproject.com/
 - フルスタックな定番フレームワーク
 - ルーティング、テンプレートエンジン、O/Rマッパー、国際化機構を含む
 - データベースのデータ管理画面を標準搭載
 ### Bottle
+- https://bottlepy.org/docs/dev/
 - 本体のコードは1ファイル
 - マイクロフレームワーク
 - 外部パッケージは不要
 - ルーティング、テンプレートエンジン、開発用WEBサーバーを含む
 ### Flask
+- http://flask.pocoo.org/
 - 「ボトルじゃなくてフラスコ」。エイプリルフールのジョークとして生まれた。
 - マイクロフレームワーク
 - Flask Extensions。拡張機能で多くのライブラリが登録されている。
 ### Tornado
+- https://www.tornadoweb.org/en/stable/
 - 非同期処理が得意
 - ノンブロッキングネットワークI/Oをベースとした非同期処理が特徴
 
