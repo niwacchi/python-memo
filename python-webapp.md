@@ -87,3 +87,61 @@ def result():
 #### リクエストオブジェクト／レスポンスオブジェクト
 - クライアントからのリクエスト情報はrequestオブジェクトに格納される。
 - リクエスト情報：アクセス先URL、HTTPメソッド、リクエストボディ、ヘッダ、Cookieなど
+
+## WSGI
+- Web Server Gateway Interface
+- Pythonで開発されたWebアプリケーションとWebサーバーの接続仕様
+- WSGIアプリケーション、WSGIサーバーの各仕様
+### WSGI準拠のWebフレームワーク
+- Django
+- Flask
+- Bottle
+### WSGI準拠のWebサーバー
+- uWSGI
+- Gunicorn
+- Bottleのrun()ではWSGIのリファレンス実装であるwsgirefがデフォルトサーバー
+- 通常はnginx、ApacheといったWebサーバーと同時に利用される。
+#### uWSGIの設定
+- スレッド数、プロセス数、タイムアウト時間を調整可能
+- 高機能なWSGIサーバー
+- uwsgi.iniに記述
+```sh
+[uwsgi]
+http = 127.0.0.1:3031
+module = app:application
+master = true
+processes = 4
+threads = 2
+```
+- app.pyも設定にあわせて変更
+```diff
+--- a/app.py
++++ b/app.py
+@@ -3,7 +3,7 @@ from bokeh.embed import components
+ from collections import namedtuple
+ from abalone_predictor import AbalonePredictor
+ from bottle import(
+-    route, run, template,
++    default_app, route, template,
+     request, HTTPError)
+ # debug(True)
+ 
+@@ -68,6 +68,5 @@ def get_graph(abalone):
+     script, div = components(p)
+     return script, div
+ 
++application = default_app()
+ 
+-# reloaderにTrueをセットするとファイル更新で再起動する
+-run(host='localhost', port=8080, reloader=True)
+```
+
+- pipコマンドでuWSGIをインストールして起動する。
+```sh
+$ pip install uwsgi
+$ uwsgi --version
+2.0.17.1
+$ uwsgi uwsgi.ini
+```
+
+- http://localhost:3031 にアクセス
