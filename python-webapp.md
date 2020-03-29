@@ -145,3 +145,8 @@ $ uwsgi uwsgi.ini
 ```
 
 - http://localhost:3031 にアクセス
+
+## Flaskを使ったWebアプリケーション開発
+- pip install flask
+- debugモード FLASK_ENV=development。ブラウザにデバッグ情報表示。
+- flask run
